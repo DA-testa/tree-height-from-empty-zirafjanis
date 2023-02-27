@@ -23,11 +23,22 @@ def compute_height(n, parents):
 
 
 def main():
-  n = int(input())
-  parents = list(map(int, input().split()))
+  input_type = input("F vai I : ")
+  if input_type == "F":
+    with open("input.txt"
+              ) as f:  #teksta fails kkads, vai jalauj pasam rakstit nosaukumu
+      n = int(f.readline())
+      parents = list(map(int, f.readline().split()))
+  elif input_type == "I":
+    n = int(input())  #pirma rinda
+    parents = list(map(int, input().split()))  #otra rinda
+  else:
+    print("kkas neiet")
+    return
+
   print(compute_height(n, parents))
 
 
-sys.setrecursionlimit(10**7)  
-threading.stack_size(2**27)  
+sys.setrecursionlimit(10**7)  # max depth of recursion
+threading.stack_size(2**27)  # new thread will get stack of such size
 threading.Thread(target=main).start()

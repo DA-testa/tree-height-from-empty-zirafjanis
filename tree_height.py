@@ -1,44 +1,41 @@
 import sys
 import threading
 
-
 def compute_height(n, parents):
-  tree = [[] for _ in range(n)]
-  for i in range(n):
-    if parents[i] != -1:
-      tree[parents[i]].append(i)
+    nodes = {}
+    for i in range(n):
+        nodes[i] = []
 
-  def dfs(node, depth):
-    if not tree[node]:
-      return depth
-    max_depth = depth
-    for child in tree[node]:
-      child_depth = dfs(child, depth + 1)
-      max_depth = max(max_depth, child_depth)
-    return max_depth
+    for i in range(n):
+        if parents[i] != -1:
+            nodes[parents[i]].append(i)
 
-  root = parents.index(-1)
-  height = dfs(root, 0)
-  return height
+    def dfs(node):
+        heights = []
+        for child in nodes[node]:
+            heights.append(dfs(child))
+        return max(heights) + 1 if heights else 1
+
+    root = parents.index(-1)
+    height = dfs(root)
+    return height
 
 
 def main():
-  input_type = input("F vai I : ")
-  if input_type == "F":
-    with open("input.txt"
-              ) as f:  #teksta fails kkads, vai jalauj pasam rakstit nosaukumu
-      n = int(f.readline())
-      parents = list(map(int, f.readline().split()))
-  elif input_type == "I":
-    n = int(input())  #pirma rinda
-    parents = list(map(int, input().split()))  #otra rinda
-  else:
-    print("kkas neiet")
-    return
+    input_type = input("Choose input type: F for file, I for console input: ")
+    if input_type == "F":
+        input_file = input("Enter input file name: ")
+        with open(input_file) as f:
+            n = int(f.readline())
+            parents = list(map(int, f.readline().split()))
+    else:
+        n = int(input("Enter number of nodes: "))
+        parents = list(map(int, input("Enter parents: ").split()))
 
-  print(compute_height(n, parents))
+    max_height = compute_height(n, parents)
+    print(max_height)
 
 
 sys.setrecursionlimit(10**7)  # max depth of recursion
-threading.stack_size(2**27)  # new thread will get stack of such size
+threading.stack_size(2**27)   # new thread will get stack of such size
 threading.Thread(target=main).start()

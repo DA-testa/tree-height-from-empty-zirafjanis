@@ -19,7 +19,7 @@ def compute_height(n, parents):
     root = parents.index(-1)
     height = dfs(root)
     return height
-
+#fddf
 
 def main():
     input_type = input("Choose input type: F for file, I for console input: ")

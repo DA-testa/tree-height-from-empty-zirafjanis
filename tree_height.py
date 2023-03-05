@@ -1,3 +1,5 @@
+# Programmu veidoja Jānis Bērziņš 1.grupa
+
 import sys
 import threading
 
@@ -31,8 +33,6 @@ def compute_height(tree, root_index):
 
 
 def main():
-    # Let the user input file name to use, don't allow file names with letter a
-    # Account for github input imprecision
     letter = input()
     if "F" in letter:
         file_name = input()
@@ -42,7 +42,8 @@ def main():
             n = int(file.readline())
             parents = list(map(int, file.readline().split())) 
     elif "I" in letter:
-        # Implement input from keyboard
+           
+
         n = int(input())
         parents = list(map(int, input().split()))
     else:
@@ -53,9 +54,9 @@ def main():
 
 
 if __name__ == "__main__":
-    # In Python, the default limit on recursion depth is rather low,
-    # so raise it here for this problem. Note that to take advantage
-    # of bigger stack, we have to launch the computation in a new thread.
-    sys.setrecursionlimit(10**7)  # max depth of recursion
-    threading.stack_size(2**27)   # new thread will get stack of such size
+    
+
+    
+    sys.setrecursionlimit(10**7)  
+    threading.stack_size(2**27)   
     threading.Thread(target=main).start()

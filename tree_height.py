@@ -36,7 +36,7 @@ def main():
     letter = input()
     if "F" in letter:
         file_name = input()
-        if "a" in file_name:
+        if "A" in file_name:
             return
         with open(f"./test/{file_name}", mode="r") as file:
             n = int(file.readline())
@@ -56,7 +56,7 @@ def main():
 if __name__ == "__main__":
     
 
-    
+
     sys.setrecursionlimit(10**7)  
     threading.stack_size(2**27)   
     threading.Thread(target=main).start()

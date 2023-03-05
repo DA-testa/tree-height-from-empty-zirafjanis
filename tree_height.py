@@ -1,6 +1,7 @@
 import sys
 import threading
 
+
 def compute_height(n, parents):
     nodes = {}
     for i in range(n):
@@ -19,7 +20,7 @@ def compute_height(n, parents):
     root = parents.index(-1)
     height = dfs(root)
     return height
-#fddf
+
 
 def main():
     input_type = input("Choose input type: F for file, I for console input: ")
@@ -36,6 +37,9 @@ def main():
     print(max_height)
 
 
+# In Python, the default limit on recursion depth is rather low,
+# so raise it here for this problem. Note that to take advantage
+# of bigger stack, we have to launch the computation in a new thread.
 sys.setrecursionlimit(10**7)  # max depth of recursion
 threading.stack_size(2**27)   # new thread will get stack of such size
 threading.Thread(target=main).start()

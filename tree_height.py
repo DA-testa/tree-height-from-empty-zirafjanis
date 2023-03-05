@@ -1,33 +1,62 @@
-# python3
+# Programmu veidoja Jānis Bērziņš 1.grupa
 
 import sys
 import threading
-import numpy
+
+def build_tree(n, parents):
+    tree = {}
+    root_index = 0
+    
+    for i in range(n):
+        tree[i] = []
+    
+    for i, parent in enumerate(parents):
+        if parent != -1:
+            tree[parent].append(i)
+        else:
+            root_index = i
+            
+    return tree, root_index
 
 
-def compute_height(n, parents):
-    # Write this function
+def compute_height(tree, root_index):
+    queue = [(root_index, 1)]
     max_height = 0
-    # Your code here
+    
+    while queue:
+        node, height = queue.pop(0)
+        max_height = max(max_height, height)
+        for child in tree[node]:
+            queue.append((child, height+1))
+            
     return max_height
 
 
 def main():
-    # implement input form keyboard and from files
-    
-    # let user input file name to use, don't allow file names with letter a
-    # account for github input inprecision
-    
-    # input number of elements
-    # input values in one variable, separate with space, split these values in an array
-    # call the function and output it's result
-    pass
+    letter = input()
+    if "F" in letter:
+        file_name = input()
+        if "A" in file_name:
+            return
+        with open(f"./test/{file_name}", mode="r") as file:
+            n = int(file.readline())
+            parents = list(map(int, file.readline().split())) 
+    elif "I" in letter:
+           
 
-# In Python, the default limit on recursion depth is rather low,
-# so raise it here for this problem. Note that to take advantage
-# of bigger stack, we have to launch the computation in a new thread.
-sys.setrecursionlimit(10**7)  # max depth of recursion
-threading.stack_size(2**27)   # new thread will get stack of such size
-threading.Thread(target=main).start()
-main()
-# print(numpy.array([1,2,3]))
+        n = int(input())
+        parents = list(map(int, input().split()))
+    else:
+        return
+
+    tree, root_index = build_tree(n, parents)
+    print(compute_height(tree, root_index))
+
+
+if __name__ == "__main__":
+    
+
+
+    sys.setrecursionlimit(10**7)  
+    threading.stack_size(2**27)   
+    threading.Thread(target=main).start()

@@ -1,61 +1,61 @@
 import sys
 import threading
 
-
-def compute_height(n, parents):
-    # Create a list to store the heights of each node
-    heights = [-1] * n
-
-    def dfs(node):
-        # If the height of this node has already been computed, return it
-        if heights[node] != -1:
-            return heights[node]
-
-        # If this node has no children, its height is 1
-        if not parents[node] in parents:
-            heights[node] = 1
-            return 1
-
-        # Compute the height of each child and take the maximum
-        max_height = 0
-        for child in range(n):
-            if parents[child] == node:
-                child_height = dfs(child)
-                max_height = max(max_height, child_height)
-
-        # Store the height of this node and return it
-        heights[node] = max_height + 1
-        return heights[node]
-
-    # Find the root of the tree
-    root = -1
+def build_tree(n, parents):
+    tree = {}
+    root_index = 0
+    
     for i in range(n):
-        if parents[i] == -1:
-            root = i
-            break
+        tree[i] = []
+    
+    for i, parent in enumerate(parents):
+        if parent != -1:
+            tree[parent].append(i)
+        else:
+            root_index = i
+            
+    return tree, root_index
 
-    # Compute the height of the tree
-    height = dfs(root)
-    return height
+
+def compute_height(tree, root_index):
+    queue = [(root_index, 1)]
+    max_height = 0
+    
+    while queue:
+        node, height = queue.pop(0)
+        max_height = max(max_height, height)
+        for child in tree[node]:
+            queue.append((child, height+1))
+            
+    return max_height
 
 
 def main():
-    # Get the input from the user
-    input_type = input("Choose input type: F for file, I for console input: ")
-    if input_type == "F":
-        input_file = input("Enter input file name: ")
-        with open(input_file) as f:
-            n = int(f.readline())
-            parents = list(map(int, f.readline().split()))
+    # Let the user input file name to use, don't allow file names with letter a
+    # Account for github input imprecision
+    letter = input()
+    if "F" in letter:
+        file_name = input()
+        if "a" in file_name:
+            return
+        with open(f"./test/{file_name}", mode="r") as file:
+            n = int(file.readline())
+            parents = list(map(int, file.readline().split())) 
+    elif "I" in letter:
+        # Implement input from keyboard
+        n = int(input())
+        parents = list(map(int, input().split()))
     else:
-        n = int(input("Enter number of nodes: "))
-        parents = list(map(int, input("Enter parents: ").split()))
+        return
 
-    # Compute the height of the tree and print it
-    max_height = compute_height(n, parents)
-    print(max_height)
+    tree, root_index = build_tree(n, parents)
+    print(compute_height(tree, root_index))
 
 
-sys.setrecursionlimit(10**7)  # max depth of recursion
-threading.stack_size(2**27)   # new thread will get stack of such size
-threading.Thread(target=main).start()
+if __name__ == "__main__":
+    # In Python, the default limit on recursion depth is rather low,
+    # so raise it here for this problem. Note that to take advantage
+    # of bigger stack, we have to launch the computation in a new thread.
+    sys.setrecursionlimit(10**7)  # max depth of recursion
+    threading.stack_size(2**27)   # new thread will get stack of such size
+    threading.Thread(target=main).start()
